@@ -1,0 +1,198 @@
+# 机场订阅
+proxy-providers:
+  Airport1:
+    type: http
+    url: "https://xxxx"
+    interval: 86400
+    proxy: DIRECT
+    header:
+      User-Agent:
+      - "Clash"
+      - "mihomo"
+      - "Clash.meta"
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      timeout: 5000
+
+# 入站配置
+tun:
+  enable: false
+
+# 全局配置
+port: 7890
+socks-port: 7891
+mixed-port: 7892
+redir-port: 7893
+tproxy-port: 7894
+
+allow-lan: true
+bind-address: "*"
+authentication:
+  - "username:password"
+
+mode: rule
+
+log-level: warning
+
+ipv6: true
+
+disable-keep-alive: false
+keep-alive-idle: 600
+keep-alive-interval: 30
+
+find-process-mode: off
+
+# 控制面板
+external-controller: 0.0.0.0:9090
+secret: ""
+external-ui: "/etc/mihomo/run/ui"
+external-ui-name: Zashboard
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/download/v1.75.1/dist-cdn-fonts.zip"
+profile:
+  store-selected: true
+  store-fake-ip: true
+unified-delay: true
+tcp-concurrent: true
+
+global-client-fingerprint: chrome
+
+geodata-mode: false
+geodata-loader: standard
+geo-auto-update: true
+geo-update-interval: 24
+geox-url:
+  geosite: https://gh-proxy.com/raw.githubusercontent.com/Loyalsoldier/domain-list-custom/release/geosite.dat
+  mmdb: https://gh-proxy.com/raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb
+  geoip: https://gh-proxy.com/raw.githubusercontent.com/Loyalsoldier/geoip/release/geoip.dat
+  asn: https://gh-proxy.com/raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-asn.mmdb
+
+# 域名嗅探
+sniffer:
+  enable: false
+  force-dns-mapping: true
+  parse-pure-ip: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
+# DNS
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: true
+
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - +.lan
+    - +.local
+    - geosite:cn
+    - geosite:private
+  
+  #dns的连接是否遵循规则,否则dns域名全部走直连
+  respect-rules: false
+
+  # default_nameserver解析dns的域名,必须用ip格式
+  default-nameserver:
+    - 127.0.0.1:6053
+  # proxy-server-nameserver只解析代理域名
+  # proxy-server-nameserver:
+  #   - 127.0.0.1:6053
+  # namesever是最主要的解析
+  nameserver:
+    - 127.0.0.1:6053
+ 
+# 出站策略
+# 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
+pr: &pr {type: select, proxies: [🚀 节点选择, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, 🚀 手动切换, DIRECT]}
+dr: &dr {type: select, proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, 🚀 手动切换]}
+nf: &nf {type: select, proxies: [🎥 奈飞节点, 🚀 节点选择, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, 🚀 手动切换, DIRECT]}
+proxy-groups:
+  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(全球直连)).)*$"}
+  - {name: 🚀 节点选择, type: select, proxies: [♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, DIRECT]}
+  - {name: 🚀 手动切换, type: select, include-all: true}
+  - {name: Ⓜ️ 微软服务, <<: *dr}
+  - {name: 🍎 Apple, <<: *dr}
+  - {name: 📲 电报消息, <<: *pr}
+  - {name: 💬 OpenAi, <<: *pr}
+  - {name: 📹 油管视频, <<: *pr}
+  - {name: 🍀 谷歌服务, <<: *pr}
+  - {name: 👨🏿‍💻 GitHub, <<: *pr}
+  - {name: 🎥 奈飞视频, <<: *nf}
+  - {name: ✈️ 测速工具, <<: *dr}
+  - {name: 🎵 TikTok, <<: *pr}
+  - {name: 🎯 全球直连, type: select, proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择]}
+  - {name: 🐟 漏网之鱼, <<: *pr}
+  - {name: 🇭🇰 香港节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)港|hk|hongkong|hong kong"}
+  - {name: 🇯🇵 日本节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)日|jp|japan"}
+  - {name: 🇺🇲 美国节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)美|us|unitedstates|united states|america"}
+  - {name: 🇨🇳 台湾节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)台|tw|taiwan|tai wan"}
+  - {name: 🇸🇬 狮城节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)新|sg|singapore"}
+  - {name: 🇰🇷 韩国节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)韩|kr|korea"}
+  - {name: 🎥 奈飞节点, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)奈飞|nf|netflix|media|解锁"}
+
+# 规则匹配
+# 此规则部分没有做防泄露处理，因为弊严重大于利！
+rules:
+  - RULE-SET,lan_domain,🎯 全球直连
+  - RULE-SET,google_cn_domain,🎯 全球直连
+  - RULE-SET,google_fcm_domain,🎯 全球直连
+  - RULE-SET,sony_domain,🎯 全球直连
+  - RULE-SET,epic_domain,🎯 全球直连
+  - RULE-SET,microsoft_domain,Ⓜ️ 微软服务
+  - RULE-SET,apple_domain,🍎 Apple
+  - RULE-SET,telegram_domain,📲 电报消息
+  - RULE-SET,ai_domain,💬 OpenAi
+  - RULE-SET,youtube_domain,📹 油管视频
+  - RULE-SET,google_domain,🍀 谷歌服务
+  - RULE-SET,github_domain,👨🏿‍💻 GitHub
+  - RULE-SET,netflix_domain,🎥 奈飞视频
+  - RULE-SET,speedtest_domain,✈️ 测速工具
+  - RULE-SET,tiktok_domain,🎵 TikTok
+  - RULE-SET,gfw_domain,🚀 节点选择
+  - RULE-SET,tracker_domain,🎯 全球直连
+  - RULE-SET,cn_domain,🎯 全球直连
+  - RULE-SET,geo-!cn_domain,🚀 节点选择
+  - RULE-SET,google_ip,🍀 谷歌服务,no-resolve
+  - RULE-SET,netflix_ip,🎥 奈飞视频,no-resolve
+  - RULE-SET,telegram_ip,📲 电报消息,no-resolve
+  - RULE-SET,cn_ip,🎯 全球直连
+  - MATCH,🐟 漏网之鱼
+
+# 规则集
+rule-anchor:
+  ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+  domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
+  class: &class {type: http, interval: 86400, behavior: classical, format: text}
+rule-providers: 
+  lan_domain: { <<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.list"}
+  google_cn_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google-cn.mrs"}
+  google_fcm_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"}
+  sony_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/sony.mrs"}
+  epic_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/epicgames.mrs"}
+  microsoft_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  apple_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple@cn.mrs"}
+  telegram_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
+  ai_domain: {  <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-chat-!cn.mrs" }
+  youtube_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  google_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  github_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
+  netflix_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
+  speedtest_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/speedtest.mrs"}
+  tiktok_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
+  gfw_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"}
+  geo-!cn_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
+  cn_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  tracker_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-public-tracker.mrs"}
+
+  cn_ip: { <<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  google_ip: { <<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  telegram_ip: { <<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  netflix_ip: { <<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
