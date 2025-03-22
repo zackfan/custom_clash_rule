@@ -146,6 +146,7 @@ rules:
   - RULE-SET,google_fcm_domain,🎯 全球直连
   - RULE-SET,sony_domain,🎯 全球直连
   - RULE-SET,epic_domain,🎯 全球直连
+  - RULE-SET,steam_domain,🎯 全球直连
   - RULE-SET,microsoft_domain,Ⓜ️ 微软服务
   - RULE-SET,apple_domain,🍎 Apple
   - RULE-SET,telegram_domain,📲 电报消息
@@ -178,6 +179,7 @@ rule-providers:
   google_fcm_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs"}
   sony_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/sony.mrs"}
   epic_domain: { <<: *domain_list, url: "https://gh-proxy.com/raw.githubusercontent.com/zackfan/custom_clash_rule/main/epic.txt"}
+  steam_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam@cn.mrs"}
   microsoft_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft@cn.mrs"}
   apple_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple@cn.mrs"}
   telegram_domain: { <<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
