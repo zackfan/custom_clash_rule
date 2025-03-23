@@ -114,7 +114,7 @@ pr: &pr {type: select, proxies: [🚀 节点选择, ♻️ 自动选择, 🇭�
 dr: &dr {type: select, proxies: [DIRECT, 🚀 节点选择, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, 🚀 手动切换]}
 nf: &nf {type: select, proxies: [🎥 奈飞节点, 🚀 节点选择, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, 🚀 手动切换, DIRECT]}
 proxy-groups:
-  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(全球直连)).)*$"}
+  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300}
   - {name: 🚀 节点选择, type: select, proxies: [♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇺🇲 美国节点, 🇨🇳 台湾节点, 🇸🇬 狮城节点, 🇰🇷 韩国节点, DIRECT]}
   - {name: 🚀 手动切换, type: select, include-all: true}
   - {name: Ⓜ️ 微软服务, <<: *dr}
