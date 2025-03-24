@@ -94,6 +94,7 @@ dns:
     - +.lan
     - +.local
     - "rule-set:lan_domain,cn_domain"
+    - +.ea.com
   
   #dns的连接是否遵循规则,否则dns域名全部走直连
   respect-rules: false
