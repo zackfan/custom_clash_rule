@@ -94,7 +94,6 @@ dns:
     - +.lan
     - +.local
     - "rule-set:lan_domain,cn_domain"
-    - +.ea.com
   
   #dns的连接是否遵循规则,否则dns域名全部走直连
   respect-rules: false
@@ -105,6 +104,11 @@ dns:
   # proxy-server-nameserver只解析代理域名
   # proxy-server-nameserver:
   #   - 127.0.0.1:6053
+  nameserver-policy:
+    "rule-set:lan_domain,cn_domain":
+      - 127.0.0.1:6053
+    "rule-set:gfw_domain,geo-!cn_domain":
+      - 127.0.0.1:6553
   # namesever是最主要的解析
   nameserver:
     - 127.0.0.1:6053
