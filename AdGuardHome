@@ -100,7 +100,7 @@ EOF
 
 	# local
 	nft add chain inet adguardhome output "{type nat hook output priority -105; policy accept; }"
-	nft add rule inet adguardhome output "meta nfproto { ipv4, ipv6 } udp dport 53 counter redirect to :$AdGuardHome_PORT comment \"LOCAL HIJACK\""
+	nft add rule inet adguardhome output "meta nfproto { ipv4, ipv6 } oif "lo" udp dport 53 counter redirect to :$AdGuardHome_PORT comment \"LOCAL HIJACK\""
 
 }
 
