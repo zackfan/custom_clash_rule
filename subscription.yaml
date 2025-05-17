@@ -26,12 +26,23 @@ proxies:
   uuid: xxxx # Xray 服务端的 UUID
   flow: xtls-rprx-vision
   tls: true
-  servername: dc99-2.ansandy.com # 服务端配置的可用 server name
+  servername: www.zshjkjhb.com # 服务端配置的可用 server name
   client-fingerprint: chrome
   skip-cert-verify: false
   reality-opts: 
     public-key: xxxx # 与服务端私钥配套的公钥
+    short-id: xxxx
   network: tcp
+
+- name: "hy2-us"
+  type: hysteria2
+  server: xxxx # 代理服务器地址
+  port: 4433
+  password: xxxxx
+  sni: xxxx # 自签证书填写伪装域名bing.com; acme证书填写自己的域名
+  up: "100 Mbps"
+  down: "500 Mbps"
+  skip-cert-verify: false # 自签证书true; acme证书false
 
 # 入站配置
 tun:
